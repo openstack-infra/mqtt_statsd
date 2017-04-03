@@ -3,3 +3,6 @@
 # process, which may cause wedges in the gate later.
 
 pbr>=1.8 # Apache-2.0
+statsd>=3.2.1  # MIT
+PyYAML>=3.10.0  # MIT
+paho-mqtt>=1.1
