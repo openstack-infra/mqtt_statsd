@@ -1,3 +1,17 @@
+# Copyright 2017 IBM Corp.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
 import signal
 import sys
 import threading
@@ -5,8 +19,6 @@ import threading
 import paho.mqtt.client as mqtt
 import statsd
 import yaml
-
-
 
 
 class MQTTStat(threading.Thread):
@@ -28,7 +40,7 @@ class MQTTStat(threading.Thread):
         self.statsd_client = statsd_client
         self.statsd_topic = statsd_topic
         self.statsd_method = statsd_type
-        
+
         def on_message(client, userdata, msg):
             if statsd_type == 'gauge':
                 statsd_client.gauge(statsd_topic, msg.payload)
@@ -103,7 +115,7 @@ def main():
     tls = None
     if ca_certs is not None:
         tls = {'ca_certs': ca_certs, 'certfile': certfile,
-               'keyfile': keyfile} 
+               'keyfile': keyfile}
 
     # Listen to topics and start statsd reporters
     if 'topics' not in conf:
@@ -120,8 +132,9 @@ def main():
             print('statsd_type %s on topic %s is not a valid type' % (
                 statsd_type, topic))
         thread = MQTTStat(mqtt_hostname, topic, statsd_topic, statsd_type,
-                          mqtt_port, websocket=websocket, auth=auth,
-                          tls=tls, keepalive=mqtt_keepalive, qos=mqtt_qos)
+                          statsd_client, mqtt_port, websocket=websocket,
+                          auth=auth, tls=tls, keepalive=mqtt_keepalive,
+                          qos=mqtt_qos)
         thread.start()
 
     while True:
