@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = mqtt_statsd
+
+[report]
+ignore_errors = True
