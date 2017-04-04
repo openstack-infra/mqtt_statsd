@@ -49,11 +49,9 @@ class MQTTStat(threading.Thread):
             self.client.username_pw_set(auth['username'],
                                         password=auth.get('password'))
 
-
     def run(self):
         def on_connect(client, userdata, flags, rc):
             client.subscribe(self.mqtt_topic)
-
 
         def on_message(client, userdata, msg):
             if self.statsd_type == 'gauge':
@@ -62,6 +60,7 @@ class MQTTStat(threading.Thread):
                 self.statsd_client.timer(self.statsd_topic, msg.payload)
             elif self.statsd_type == 'counter':
                 self.statsd_client.incr(self.statsd_topic)
+
         self.client.on_connect = on_connect
         self.client.on_message = on_message
         self.client.connect(self.hostname, self.port)
