@@ -69,6 +69,12 @@ class MQTTStat(threading.Thread):
 
 def main():
     conf = None
+    if len(sys.argv) != 2:
+        print("Incorrect number of arguments, see --help")
+        sys.exit(1)
+    if sys.argv[1] == '--help' or sys.argv[1] == '-h':
+        print("usage: mqtt_statsd <config file>")
+        sys.exit(0)
     with open(sys.argv[1], 'r') as conf_file:
         conf = yaml.load(conf_file.read())
     if not conf:
